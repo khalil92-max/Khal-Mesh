@@ -1,5 +1,5 @@
 import "server-only";
-import { BUCKET, getServiceClient } from "./supabase";
+import { getServiceClient } from "./supabase";
 import type { Item, ItemType, ItemWithAttachment } from "./types";
 
 /** يستخرج الاسم الأصلي للملف من المسار المخزَّن (uuid-اسم الملف). */
@@ -9,23 +9,16 @@ function originalName(filePath: string): string {
   return dash >= 0 ? base.slice(dash + 1) : base;
 }
 
-async function withAttachments(items: Item[]): Promise<ItemWithAttachment[]> {
-  const supabase = getServiceClient();
-  return Promise.all(
-    items.map(async (item) => {
-      if (!item.file_path) {
-        return { ...item, attachmentUrl: null, attachmentName: null };
-      }
-      const { data } = await supabase.storage
-        .from(BUCKET)
-        .createSignedUrl(item.file_path, 60 * 60); // ساعة واحدة
-      return {
-        ...item,
-        attachmentUrl: data?.signedUrl ?? null,
-        attachmentName: originalName(item.file_path),
-      };
-    })
-  );
+/**
+ * المرفقات تُخدَّم عبر مسار تطبيقنا (/api/file/[id]) وليس رابط Supabase المباشر،
+ * عشان نتحكّم بنوع المحتوى — فملفات HTML تشتغل كصفحة بدل ما تُعرض كنص.
+ */
+function withAttachments(items: Item[]): ItemWithAttachment[] {
+  return items.map((item) => ({
+    ...item,
+    attachmentUrl: item.file_path ? `/api/file/${item.id}` : null,
+    attachmentName: item.file_path ? originalName(item.file_path) : null,
+  }));
 }
 
 export async function getItems(opts: {

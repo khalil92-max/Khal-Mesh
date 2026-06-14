@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, Paperclip, Pencil } from "lucide-react";
+import { ExternalLink, Paperclip, Pencil, Play } from "lucide-react";
 import type { ItemWithAttachment } from "@/lib/types";
 import TypeBadge from "./TypeBadge";
 import DeleteButton from "./DeleteButton";
@@ -60,17 +60,30 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
         </a>
       )}
 
-      {item.attachmentUrl && (
-        <a
-          href={item.attachmentUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted transition-colors hover:text-accent"
-        >
-          <Paperclip size={13} strokeWidth={1.75} />
-          {item.attachmentName ?? "مرفق"}
-        </a>
-      )}
+      {item.attachmentUrl &&
+        (() => {
+          const isHtml = /\.html?$/i.test(item.attachmentName ?? "");
+          return (
+            <a
+              href={item.attachmentUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className={
+                "mt-3 inline-flex items-center gap-1.5 text-xs transition-colors " +
+                (isHtml
+                  ? "font-medium text-link hover:text-accent"
+                  : "text-muted hover:text-accent")
+              }
+            >
+              {isHtml ? (
+                <Play size={13} strokeWidth={1.75} />
+              ) : (
+                <Paperclip size={13} strokeWidth={1.75} />
+              )}
+              {isHtml ? `تشغيل · ${item.attachmentName}` : item.attachmentName ?? "مرفق"}
+            </a>
+          );
+        })()}
 
       <div className="mono mt-3 flex items-center gap-3 text-[11px] text-faint">
         <span>{item.author}</span>
