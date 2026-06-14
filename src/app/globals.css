@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* خلفية فاتحة دافئة — كريمي مو أبيض ناصع */
+  --bg: #f5f1e8;
+  --surface: #fbf8f1;
+  --ink: #211c15;
+  --muted: #6e6557;
+  --faint: #9c9384;
+  --border: #e4ddcd;
+  --border-strong: #d2c9b4;
+  /* لكنة ترابية هادئة — لا gradients */
+  --accent: #9a3b22;
+  --note: #95661a; /* أوكر */
+  --link: #2c6657; /* أخضر مزرق هادئ */
+  --project: #4f5a3a; /* زيتوني */
+}
+
+* {
+  letter-spacing: 0;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  letter-spacing: 0;
+  font-feature-settings: "tnum" 1;
+}
+
+/* أرقام لاتينية في الحقول المونو حتى مع RTL */
+.tnum {
+  direction: ltr;
+  unicode-bidi: plaintext;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+}
