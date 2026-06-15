@@ -2,9 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
-    // مرفقات قد تكون كبيرة نسبياً عند الرفع عبر server actions
+    // رفع المرفقات/المجلّدات يمرّ عبر server actions.
+    // ملاحظة: على Vercel يبقى حدّ جسم الطلب ~4.5MB لكل عملية رفع مهما رفعنا هذا.
     serverActions: {
-      bodySizeLimit: "10mb",
+      bodySizeLimit: "25mb",
     },
   },
 };

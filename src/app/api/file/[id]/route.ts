@@ -50,6 +50,7 @@ export async function GET(
   return new NextResponse(data.stream(), {
     headers: {
       "Content-Type": contentTypeFor(item.file_path),
+      "X-Content-Type-Options": "nosniff",
       "Cache-Control": "private, max-age=0, must-revalidate",
     },
   });

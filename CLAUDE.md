@@ -28,10 +28,18 @@
   `src/middleware.ts` يحمي كل المسارات ماعدا `/login` و `/api/login`.
 - البيانات: server actions في `src/app/actions.ts`؛ القراءة في `src/lib/items.ts`.
 - المرفقات تُخدَّم عبر `/api/file/[id]` بنوع المحتوى الصحيح (HTML يعمل كصفحة، لا كنص).
+- **مرفقات المجلّدات**: يمكن رفع مجلّد كامل لعنصر (أعمدة `folder_prefix/folder_entry/folder_files`
+  على `items`، تخزين تحت `folders/<uuid>/...`). يُخدَّم عبر `/api/folder/[id]/[...path]`
+  فيشتغل موقع HTML بروابطه النسبية؛ صفحة `/items/[id]/files` تتصفّح الملفات.
+  ⚠️ المحتوى المرفوع يعمل على **نفس أصل التطبيق** (لتُحمَّل ملفاته الفرعية بالكوكي) — ارفع
+  فقط مجلّدات تثق بها. الرفع يمرّ عبر server action (حدّ Vercel ~4.5MB لكل عملية).
 
 ## أدوات الإعداد (lمرة واحدة، في scripts/)
 - `migrate.sql` / `grants.sql`: إنشاء الجدول + bucket + الصلاحيات (تُنفَّذ في Supabase SQL Editor).
-- `smoke.mjs` / `list.mjs`: فحص قاعدة البيانات محلياً (`node scripts/<file>.mjs`).
+- `migrate-folders.sql`: يضيف أعمدة المجلّدات (شغّلها في SQL Editor، أو
+  `node scripts/migrate-folders.mjs "<DATABASE_URL>"`). قاعدة المحلّي والإنتاج **واحدة**.
+- `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs`: فحص قاعدة البيانات
+  محلياً (`node scripts/<file>.mjs`).
 
 ## افتراضات
 - المساحة مشتركة — أي مستخدم يعدّل/يحذف أي عنصر. لتقييد ذلك أضِف فحص `author === user`

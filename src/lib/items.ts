@@ -13,11 +13,23 @@ function originalName(filePath: string): string {
  * المرفقات تُخدَّم عبر مسار تطبيقنا (/api/file/[id]) وليس رابط Supabase المباشر،
  * عشان نتحكّم بنوع المحتوى — فملفات HTML تشتغل كصفحة بدل ما تُعرض كنص.
  */
+/** يبني رابط فتح المجلّد على ملف البداية مع ترميز كل مقطع من المسار. */
+function folderUrlFor(item: Item): string | null {
+  if (!item.folder_prefix || !item.folder_entry) return null;
+  const encoded = item.folder_entry
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+  return `/api/folder/${item.id}/${encoded}`;
+}
+
 function withAttachments(items: Item[]): ItemWithAttachment[] {
   return items.map((item) => ({
     ...item,
     attachmentUrl: item.file_path ? `/api/file/${item.id}` : null,
     attachmentName: item.file_path ? originalName(item.file_path) : null,
+    folderUrl: folderUrlFor(item),
+    folderCount: item.folder_files?.length ?? 0,
   }));
 }
 

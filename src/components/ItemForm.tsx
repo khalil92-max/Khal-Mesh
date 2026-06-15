@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { Folder } from "lucide-react";
 import {
   ITEM_TYPES,
   TYPE_META,
@@ -26,6 +27,8 @@ function SubmitButton({ label }: { label: string }) {
 const fieldClass =
   "w-full rounded-md border border-line bg-bg px-3 py-2 text-ink shadow-sm outline-none transition-colors placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20";
 const labelClass = "mb-1.5 block text-xs font-medium text-muted";
+const fileInputClass =
+  "block w-full text-sm text-muted file:mr-0 file:ml-3 file:cursor-pointer file:rounded-md file:border file:border-line file:bg-hover file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-ink hover:file:border-line-strong";
 
 export default function ItemForm({
   action,
@@ -37,6 +40,33 @@ export default function ItemForm({
   submitLabel: string;
 }) {
   const [type, setType] = useState<ItemType>(item?.type ?? "note");
+  const folderRef = useRef<HTMLInputElement>(null);
+  const [folderPaths, setFolderPaths] = useState("");
+  const [folderSummary, setFolderSummary] = useState<string | null>(null);
+
+  // تفعيل اختيار مجلّد كامل (سمة غير قياسية تُضبط عبر الـ DOM)
+  useEffect(() => {
+    const el = folderRef.current;
+    if (el) {
+      el.setAttribute("webkitdirectory", "");
+      el.setAttribute("directory", "");
+    }
+  }, []);
+
+  function onFolderChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) {
+      setFolderPaths("");
+      setFolderSummary(null);
+      return;
+    }
+    const arr = Array.from(files);
+    // المسارات النسبية تُفقد من FormData، فنحفظها في حقل مخفي بنفس الترتيب
+    const paths = arr.map((f) => f.webkitRelativePath || f.name);
+    setFolderPaths(JSON.stringify(paths));
+    const top = paths[0]?.split("/")[0] || "مجلّد";
+    setFolderSummary(`${top} — ${arr.length} ملف`);
+  }
 
   return (
     <form action={action} className="flex flex-col gap-6">
@@ -116,16 +146,45 @@ export default function ItemForm({
       )}
 
       <div>
-        <span className={labelClass}>مرفق (اختياري)</span>
-        <input
-          name="file"
-          type="file"
-          className="block w-full text-sm text-muted file:mr-0 file:ml-3 file:cursor-pointer file:rounded-md file:border file:border-line file:bg-hover file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-ink hover:file:border-line-strong"
-        />
+        <span className={labelClass}>مرفق مفرد (اختياري)</span>
+        <input name="file" type="file" className={fileInputClass} />
         {item?.file_path && (
           <label className="mt-2 flex items-center gap-2 text-xs text-muted">
             <input type="checkbox" name="remove_attachment" />
             إزالة المرفق الحالي
+          </label>
+        )}
+      </div>
+
+      <div>
+        <span className={labelClass}>مجلّد كامل (اختياري)</span>
+        <input type="hidden" name="folder_paths" value={folderPaths} />
+        <input
+          ref={folderRef}
+          name="folder"
+          type="file"
+          multiple
+          onChange={onFolderChange}
+          className={fileInputClass}
+        />
+        {folderSummary ? (
+          <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-ink">
+            <Folder size={13} strokeWidth={1.75} className="text-link-dot" />
+            {folderSummary}
+          </p>
+        ) : (
+          <p className="mt-1.5 text-xs text-faint">
+            ارفع مجلّداً بكل ملفاته (مثل موقع HTML) — يُفتح على index.html ويعمل
+            بروابطه النسبية.
+          </p>
+        )}
+        {item?.folder_prefix && (
+          <label className="mt-2 flex items-center gap-2 text-xs text-muted">
+            <input type="checkbox" name="remove_folder" />
+            إزالة المجلّد الحالي
+            {item.folder_files?.length
+              ? ` (${item.folder_files.length} ملف)`
+              : ""}
           </label>
         )}
       </div>

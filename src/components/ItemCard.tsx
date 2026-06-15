@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ExternalLink, Paperclip, Pencil, Play } from "lucide-react";
+import {
+  ExternalLink,
+  FolderOpen,
+  List,
+  Paperclip,
+  Pencil,
+  Play,
+} from "lucide-react";
 import type { ItemWithAttachment } from "@/lib/types";
 import { TYPE_META } from "@/lib/types";
 import TypeBadge from "./TypeBadge";
@@ -102,6 +109,34 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
             </a>
           );
         })()}
+
+      {item.folderUrl && (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <a
+            href={item.folderUrl}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-line bg-white/70 px-2 py-1 text-xs font-medium text-tag-fg transition-colors hover:bg-white"
+          >
+            <FolderOpen
+              size={13}
+              strokeWidth={1.75}
+              className="shrink-0 text-link-dot"
+            />
+            <span className="truncate">
+              فتح المجلّد
+              {item.folderCount ? ` · ${item.folderCount} ملف` : ""}
+            </span>
+          </a>
+          <Link
+            href={`/items/${item.id}/files`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-line bg-white/70 px-2 py-1 text-xs font-medium text-tag-fg transition-colors hover:bg-white"
+          >
+            <List size={13} strokeWidth={1.75} className="shrink-0" />
+            تصفّح الملفات
+          </Link>
+        </div>
+      )}
 
       <footer className="mt-auto flex items-center justify-between gap-2 pt-1.5 text-xs text-tag-fg">
         <Avatar name={item.author} />

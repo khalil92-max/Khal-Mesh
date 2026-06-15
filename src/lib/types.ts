@@ -7,15 +7,25 @@ export interface Item {
   body: string | null;
   url: string | null;
   file_path: string | null;
+  /** بادئة تخزين المجلّد المرفق (folders/<uuid>) أو null. */
+  folder_prefix: string | null;
+  /** المسار النسبي لملف بداية المجلّد (عادةً index.html). */
+  folder_entry: string | null;
+  /** المسارات النسبية لكل ملفات المجلّد. */
+  folder_files: string[] | null;
   author: string;
   created_at: string;
   updated_at: string;
 }
 
-/** item مع رابط مؤقت موقّع للمرفق (يُولّد server-side عند العرض). */
+/** item مع روابط جاهزة للمرفق/المجلّد (تُولّد server-side عند العرض). */
 export interface ItemWithAttachment extends Item {
   attachmentUrl: string | null;
   attachmentName: string | null;
+  /** رابط فتح المجلّد على ملف البداية، أو null. */
+  folderUrl: string | null;
+  /** عدد ملفات المجلّد. */
+  folderCount: number;
 }
 
 export const ITEM_TYPES: ItemType[] = ["note", "link", "project"];
