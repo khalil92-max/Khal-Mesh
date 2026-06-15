@@ -40,7 +40,7 @@ export default async function HomePage({
 
   return (
     <AppShell activeType={type} activeAuthor={author}>
-      <div className="mx-auto max-w-7xl px-8 py-6">
+      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <LayoutGrid
@@ -54,12 +54,14 @@ export default async function HomePage({
               <p className="text-xs text-muted">{meta}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Suspense
-              fallback={<div className="h-9 w-full rounded-md bg-hover sm:w-64" />}
-            >
-              <SearchBox />
-            </Suspense>
+          <div className="flex items-center gap-2 max-sm:w-full">
+            <div className="min-w-0 flex-1 sm:w-64 sm:flex-none">
+              <Suspense
+                fallback={<div className="h-9 w-full rounded-md bg-hover" />}
+              >
+                <SearchBox />
+              </Suspense>
+            </div>
             <Link
               href="/new"
               className="inline-flex h-9 shrink-0 items-center gap-1 rounded-md bg-btn px-3 text-sm font-medium text-white shadow-soft transition-colors hover:bg-btn-hover"

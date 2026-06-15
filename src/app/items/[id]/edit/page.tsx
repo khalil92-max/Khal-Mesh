@@ -21,7 +21,7 @@ export default async function EditItemPage({
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-content px-8 py-6">
+      <div className="mx-auto max-w-content px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
         <nav className="mb-5 flex min-w-0 items-center gap-1 text-xs text-muted">
           <Link
             href="/"

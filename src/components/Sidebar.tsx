@@ -58,7 +58,7 @@ export default async function Sidebar({
   const types: ItemType[] = ["note", "link", "project"];
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-line bg-sidebar">
+    <aside className="flex h-full w-full flex-col overflow-y-auto border-r border-line bg-sidebar">
       <div className="flex items-center gap-2 px-4 pb-3 pt-4">
         <span className="flex h-5 w-5 items-center justify-center rounded bg-ink text-[11px] font-bold text-white">
           خ

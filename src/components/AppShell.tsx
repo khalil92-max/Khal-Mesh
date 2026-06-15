@@ -1,9 +1,10 @@
 import Sidebar from "./Sidebar";
+import ClientShell from "./ClientShell";
 
 /**
- * هيكل التطبيق بطراز Notion: الشريط الجانبي على اليسار + منطقة المحتوى
- * تملأ البقية على اليمين. في RTL مع flex، أول عنصر (المحتوى) يبدأ من
- * اليمين ويتمدّد، والشريط ذو العرض الثابت يستقرّ على أقصى اليسار.
+ * هيكل التطبيق بطراز Notion: الشريط على اليسار + المحتوى يمينه.
+ * التخطيط المتجاوب في ClientShell (درج على الجوّال، ثابت على md+).
+ * يُمرَّر الشريط (مكوّن خادم async) كـ prop فيبقى مُصيَّراً على الخادم.
  */
 export default function AppShell({
   children,
@@ -15,9 +16,10 @@ export default function AppShell({
   activeAuthor?: string;
 }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-bg">
-      <main className="min-w-0 flex-1 overflow-y-auto">{children}</main>
-      <Sidebar activeType={activeType} activeAuthor={activeAuthor} />
-    </div>
+    <ClientShell
+      sidebar={<Sidebar activeType={activeType} activeAuthor={activeAuthor} />}
+    >
+      {children}
+    </ClientShell>
   );
 }

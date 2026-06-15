@@ -34,7 +34,7 @@ export default function SearchBox() {
   }, [q]);
 
   return (
-    <div className="flex h-9 items-center gap-2 rounded-md border border-line bg-bg px-2.5 shadow-sm transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20 sm:w-64">
+    <div className="flex h-9 w-full items-center gap-2 rounded-md border border-line bg-bg px-2.5 shadow-sm transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
       <Search size={15} strokeWidth={1.75} className="shrink-0 text-faint" />
       <input
         value={q}
