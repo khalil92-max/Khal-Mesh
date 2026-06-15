@@ -15,10 +15,11 @@ export default function DeleteButton({ id }: { id: string }) {
     >
       <button
         type="submit"
-        className="flex items-center gap-1 text-muted transition-colors hover:text-accent"
+        className="flex rounded-md p-1.5 text-tag-fg transition-colors hover:bg-white/70 hover:text-danger"
         title="حذف"
+        aria-label="حذف"
       >
-        <Trash2 size={14} strokeWidth={1.75} />
+        <Trash2 size={15} strokeWidth={1.75} />
       </button>
     </form>
   );

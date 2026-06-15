@@ -24,6 +24,7 @@ function withAttachments(items: Item[]): ItemWithAttachment[] {
 export async function getItems(opts: {
   type?: ItemType | "all";
   q?: string;
+  author?: string;
 }): Promise<ItemWithAttachment[]> {
   const supabase = getServiceClient();
 
@@ -34,6 +35,10 @@ export async function getItems(opts: {
 
   if (opts.type && opts.type !== "all") {
     query = query.eq("type", opts.type);
+  }
+
+  if (opts.author) {
+    query = query.eq("author", opts.author);
   }
 
   const q = opts.q?.trim();

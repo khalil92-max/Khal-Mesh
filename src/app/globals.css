@@ -3,19 +3,37 @@
 @tailwind utilities;
 
 :root {
-  /* خلفية فاتحة دافئة — كريمي مو أبيض ناصع */
-  --bg: #f5f1e8;
-  --surface: #fbf8f1;
-  --ink: #211c15;
-  --muted: #6e6557;
-  --faint: #9c9384;
-  --border: #e4ddcd;
-  --border-strong: #d2c9b4;
-  /* لكنة ترابية هادئة — لا gradients */
-  --accent: #9a3b22;
-  --note: #95661a; /* أوكر */
-  --link: #2c6657; /* أخضر مزرق هادئ */
-  --project: #4f5a3a; /* زيتوني */
+  /* قاعدة محايدة بطراز Notion */
+  --bg: #ffffff; /* خلفية منطقة المحتوى */
+  --sidebar: #fbfbfa; /* خلفية الشريط الجانبي */
+  --hover: #f1f1ef; /* تظليل المرور */
+  --ink: #37352f; /* النص الأساسي */
+  --ink-soft: rgba(55, 53, 47, 0.62); /* نص أساسي أخف */
+  --muted: #6e6d6a; /* نص ثانوي (≥AA) */
+  --faint: #8e8d89; /* أيقونات/فواصل/placeholder فقط */
+  --border: rgba(55, 53, 47, 0.09);
+  --border-strong: rgba(55, 53, 47, 0.16);
+
+  /* أزرق Notion — قنوات RGB لدعم الشفافية في Tailwind */
+  --accent-rgb: 35 131 226;
+  --accent: rgb(var(--accent-rgb));
+  --btn: #1a6fc4; /* تعبئة الزر الأساسي (نص أبيض ≥AA) */
+  --btn-hover: #155fad;
+  --danger: #d44c47; /* أيقونات/لكنات الخطر (≥3:1) */
+  --danger-strong: #c0392f; /* نص الخطر (≥AA على الأبيض) */
+  --today: #d23636; /* تمييز "اليوم" — أغمق ليعبر AA مع النص الأبيض */
+  --link: #337ea9; /* روابط نصّية */
+  --tag-fg: rgba(50, 48, 44, 0.9); /* نص على الباستيل — حبر شبه أسود */
+
+  /* لوحة Notion Calendar: tint (تعبئة البطاقة) + dot (نقطة مشبعة) */
+  --note-bg: #fdeecb; /* كهرماني */
+  --note-dot: #e0a020;
+  --link-bg: #d8e6f2; /* أزرق */
+  --link-dot: #3b87d4;
+  --project-bg: #d6ecd8; /* أخضر */
+  --project-dot: #52a468;
+  --p1-dot: #9a7dd6; /* بنفسجي — شخص 1 */
+  --p2-dot: #e8814a; /* برتقالي — شخص 2 */
 }
 
 * {
@@ -32,12 +50,23 @@ body {
   background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* حلقة تركيز واضحة لكل عنصر تفاعلي (WCAG 2.4.7) */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .mono {
@@ -46,7 +75,6 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
-/* أرقام لاتينية في الحقول المونو حتى مع RTL */
 .tnum {
   direction: ltr;
   unicode-bidi: plaintext;
@@ -61,4 +89,19 @@ button {
 
 a {
   color: inherit;
+}
+
+/* شريط تمرير ناعم */
+* {
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }

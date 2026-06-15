@@ -19,11 +19,11 @@ export default function LogoutButton() {
     <button
       onClick={logout}
       disabled={loading}
-      className="flex items-center gap-1.5 text-muted transition-colors hover:text-accent disabled:opacity-50"
+      className="flex rounded-md p-1.5 text-muted transition-colors hover:bg-hover hover:text-ink disabled:opacity-50"
       title="تسجيل الخروج"
+      aria-label="تسجيل الخروج"
     >
-      <LogOut size={15} strokeWidth={1.75} />
-      <span className="mono text-xs uppercase">logout</span>
+      <LogOut size={16} strokeWidth={1.75} />
     </button>
   );
 }

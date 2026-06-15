@@ -1,41 +1,56 @@
 import Link from "next/link";
 import { ExternalLink, Paperclip, Pencil, Play } from "lucide-react";
 import type { ItemWithAttachment } from "@/lib/types";
+import { TYPE_META } from "@/lib/types";
 import TypeBadge from "./TypeBadge";
+import Avatar from "./Avatar";
 import DeleteButton from "./DeleteButton";
 
 function formatDate(iso: string): string {
-  // YYYY-MM-DD بأرقام لاتينية
   return new Date(iso).toISOString().slice(0, 10);
 }
 
 export default function ItemCard({ item }: { item: ItemWithAttachment }) {
+  const meta = TYPE_META[item.type];
+
   return (
-    <article className="group py-6">
-      <div className="mb-2 flex items-center justify-between gap-3">
+    <article
+      className={
+        "group relative flex flex-col gap-2.5 rounded-card border-s-4 p-4 ring-1 ring-black/5 transition-shadow duration-150 hover:ring-black/10 " +
+        meta.fill +
+        " " +
+        meta.bar
+      }
+    >
+      <header className="flex items-center justify-between gap-2">
         <TypeBadge type={item.type} />
-        <div className="flex items-center gap-3 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+        <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 [@media(hover:none)]:opacity-100">
           <Link
             href={`/items/${item.id}/edit`}
-            className="flex items-center gap-1 text-muted transition-colors hover:text-ink"
+            className="rounded-md p-1.5 text-tag-fg transition-colors hover:bg-white/70"
             title="تعديل"
+            aria-label="تعديل"
           >
-            <Pencil size={14} strokeWidth={1.75} />
+            <Pencil size={15} strokeWidth={1.75} />
           </Link>
           <DeleteButton id={item.id} />
         </div>
-      </div>
+      </header>
 
-      <h2 className="text-lg font-semibold leading-snug text-ink">
+      <h2 className="break-words text-base font-semibold leading-snug text-ink">
         {item.type !== "note" && item.url ? (
           <a
             href={item.url}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 transition-colors hover:text-accent"
+            className="inline-flex items-center gap-1.5 hover:underline"
           >
             {item.title}
-            <ExternalLink size={15} strokeWidth={1.75} className="text-faint" />
+            <ExternalLink
+              size={14}
+              strokeWidth={1.75}
+              className="shrink-0 opacity-50"
+            />
           </a>
         ) : (
           item.title
@@ -43,7 +58,7 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
       </h2>
 
       {item.type === "note" && item.body && (
-        <p className="mt-2 whitespace-pre-wrap text-[15px] leading-relaxed text-muted">
+        <p className="line-clamp-4 whitespace-pre-wrap text-sm leading-relaxed text-tag-fg">
           {item.body}
         </p>
       )}
@@ -53,7 +68,7 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
           href={item.url}
           target="_blank"
           rel="noreferrer noopener"
-          className="mono mt-2 block truncate text-xs text-link hover:underline"
+          className="mono block truncate text-xs text-tag-fg hover:underline"
           dir="ltr"
         >
           {item.url}
@@ -68,28 +83,30 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
               href={item.attachmentUrl}
               target="_blank"
               rel="noreferrer noopener"
-              className={
-                "mt-3 inline-flex items-center gap-1.5 text-xs transition-colors " +
-                (isHtml
-                  ? "font-medium text-link hover:text-accent"
-                  : "text-muted hover:text-accent")
-              }
+              className="inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border border-line bg-white/70 px-2 py-1 text-xs font-medium text-tag-fg transition-colors hover:bg-white"
             >
               {isHtml ? (
-                <Play size={13} strokeWidth={1.75} />
+                <Play
+                  size={13}
+                  strokeWidth={1.75}
+                  className="shrink-0 text-link-dot"
+                />
               ) : (
-                <Paperclip size={13} strokeWidth={1.75} />
+                <Paperclip size={13} strokeWidth={1.75} className="shrink-0" />
               )}
-              {isHtml ? `تشغيل · ${item.attachmentName}` : item.attachmentName ?? "مرفق"}
+              <span className="truncate">
+                {isHtml
+                  ? `تشغيل · ${item.attachmentName}`
+                  : item.attachmentName ?? "مرفق"}
+              </span>
             </a>
           );
         })()}
 
-      <div className="mono mt-3 flex items-center gap-3 text-[11px] text-faint">
-        <span>{item.author}</span>
-        <span className="text-line-strong">·</span>
-        <span className="tnum">{formatDate(item.created_at)}</span>
-      </div>
+      <footer className="mt-auto flex items-center justify-between gap-2 pt-1.5 text-xs text-tag-fg">
+        <Avatar name={item.author} />
+        <span className="tnum mono shrink-0">{formatDate(item.created_at)}</span>
+      </footer>
     </article>
   );
 }

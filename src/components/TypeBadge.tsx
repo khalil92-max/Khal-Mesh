@@ -1,20 +1,13 @@
 import type { ItemType } from "@/lib/types";
+import { TYPE_META } from "@/lib/types";
 
-const STYLES: Record<ItemType, { label: string; color: string }> = {
-  note: { label: "NOTE", color: "var(--note)" },
-  link: { label: "LINK", color: "var(--link)" },
-  project: { label: "PROJECT", color: "var(--project)" },
-};
-
+/** تصنيف العنصر: نقطة لون التقويم + التسمية، على بطاقة باستيل. */
 export default function TypeBadge({ type }: { type: ItemType }) {
-  const s = STYLES[type];
+  const meta = TYPE_META[type];
   return (
-    <span className="mono inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
-      <span
-        className="inline-block h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: s.color }}
-      />
-      <span style={{ color: s.color }}>{s.label}</span>
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-tag-fg">
+      <span className={"h-2 w-2 shrink-0 rounded-full " + meta.dot} />
+      {meta.label}
     </span>
   );
 }

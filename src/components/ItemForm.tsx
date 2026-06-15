@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { ITEM_TYPES, TYPE_LABELS, type Item, type ItemType } from "@/lib/types";
+import {
+  ITEM_TYPES,
+  TYPE_META,
+  type Item,
+  type ItemType,
+} from "@/lib/types";
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -11,7 +16,7 @@ function SubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-full bg-ink px-5 py-2 text-sm font-medium text-bg transition-opacity hover:opacity-85 disabled:opacity-50"
+      className="rounded-md bg-btn px-4 py-2 text-sm font-medium text-white shadow-soft transition-colors hover:bg-btn-hover disabled:opacity-50"
     >
       {pending ? "جارٍ الحفظ…" : label}
     </button>
@@ -19,8 +24,8 @@ function SubmitButton({ label }: { label: string }) {
 }
 
 const fieldClass =
-  "w-full border-b border-line-strong bg-transparent py-2 text-ink outline-none transition-colors focus:border-accent placeholder:text-faint";
-const labelClass = "mono mb-1 block text-xs uppercase text-faint";
+  "w-full rounded-md border border-line bg-bg px-3 py-2 text-ink shadow-sm outline-none transition-colors placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20";
+const labelClass = "mb-1.5 block text-xs font-medium text-muted";
 
 export default function ItemForm({
   action,
@@ -38,20 +43,30 @@ export default function ItemForm({
       <div>
         <span className={labelClass}>النوع</span>
         <input type="hidden" name="type" value={type} />
-        <div className="flex flex-wrap gap-1">
-          {ITEM_TYPES.map((t) => (
-            <button
-              type="button"
-              key={t}
-              onClick={() => setType(t)}
-              className={
-                "rounded-full px-3 py-1 text-sm transition-colors " +
-                (type === t ? "bg-ink text-bg" : "text-muted hover:text-ink")
-              }
-            >
-              {TYPE_LABELS[t]}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-1.5">
+          {ITEM_TYPES.map((t) => {
+            const meta = TYPE_META[t];
+            const active = type === t;
+            return (
+              <button
+                type="button"
+                key={t}
+                onClick={() => setType(t)}
+                className={
+                  "inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors " +
+                  (active
+                    ? "border-line-strong bg-hover font-medium text-ink"
+                    : "border-line text-muted hover:bg-hover hover:text-ink")
+                }
+              >
+                <span
+                  className={"h-2 w-2 rounded-full " + meta.dot}
+                  aria-hidden
+                />
+                {meta.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -105,7 +120,7 @@ export default function ItemForm({
         <input
           name="file"
           type="file"
-          className="block w-full text-sm text-muted file:mr-0 file:ml-3 file:cursor-pointer file:rounded-full file:border file:border-line-strong file:bg-surface file:px-3 file:py-1 file:text-xs file:text-ink hover:file:border-accent"
+          className="block w-full text-sm text-muted file:mr-0 file:ml-3 file:cursor-pointer file:rounded-md file:border file:border-line file:bg-hover file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-ink hover:file:border-line-strong"
         />
         {item?.file_path && (
           <label className="mt-2 flex items-center gap-2 text-xs text-muted">
@@ -117,7 +132,10 @@ export default function ItemForm({
 
       <div className="flex items-center gap-4 pt-2">
         <SubmitButton label={submitLabel} />
-        <Link href="/" className="text-sm text-muted transition-colors hover:text-ink">
+        <Link
+          href="/"
+          className="text-sm text-muted transition-colors hover:text-ink"
+        >
           إلغاء
         </Link>
       </div>
