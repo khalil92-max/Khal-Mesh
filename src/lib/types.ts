@@ -28,6 +28,18 @@ export interface ItemWithAttachment extends Item {
   folderCount: number;
 }
 
+/** موديول ضمن المنهج، مع أسماء من أكمله. */
+export interface Module {
+  id: string;
+  title: string;
+  position: number;
+  completed_by: string[];
+  file_path: string | null;
+  author: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export const ITEM_TYPES: ItemType[] = ["note", "link", "project"];
 
 export const TYPE_LABELS: Record<ItemType, string> = {

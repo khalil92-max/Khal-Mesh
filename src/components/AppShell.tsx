@@ -10,14 +10,18 @@ export default function AppShell({
   children,
   activeType,
   activeAuthor,
+  nav,
 }: {
   children: React.ReactNode;
   activeType?: string;
   activeAuthor?: string;
+  nav?: string;
 }) {
   return (
     <ClientShell
-      sidebar={<Sidebar activeType={activeType} activeAuthor={activeAuthor} />}
+      sidebar={
+        <Sidebar activeType={activeType} activeAuthor={activeAuthor} nav={nav} />
+      }
     >
       {children}
     </ClientShell>

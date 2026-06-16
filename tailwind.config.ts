@@ -30,6 +30,8 @@ const config: Config = {
         "project-dot": "var(--project-dot)",
         "p1-dot": "var(--p1-dot)",
         "p2-dot": "var(--p2-dot)",
+        "purple-bg": "var(--purple-bg)",
+        "purple-line": "var(--purple-line)",
       },
       borderColor: {
         DEFAULT: "var(--border)",

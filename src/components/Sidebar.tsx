@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Layers } from "lucide-react";
+import { GraduationCap, Layers } from "lucide-react";
 import { getCurrentUser, getAllowedUsers } from "@/lib/auth";
 import { TYPE_META, type ItemType } from "@/lib/types";
 import MiniCalendar from "./MiniCalendar";
@@ -49,9 +49,11 @@ const PERSON_DOTS = ["bg-p1-dot", "bg-p2-dot"];
 export default async function Sidebar({
   activeType = "all",
   activeAuthor,
+  nav,
 }: {
   activeType?: string;
   activeAuthor?: string;
+  nav?: string;
 }) {
   const user = await getCurrentUser();
   const people = getAllowedUsers().map((u) => u.name);
@@ -72,11 +74,31 @@ export default async function Sidebar({
 
       <div className="mx-2 border-t border-line" />
 
-      <nav className="flex flex-col gap-0.5 px-2 py-3">
+      <nav className="flex flex-col gap-0.5 px-2 pt-3">
+        <Link
+          href="/curriculum"
+          className={
+            "flex items-center gap-2.5 rounded-md bg-purple-bg px-2 py-1.5 text-sm font-medium text-ink transition hover:brightness-[0.97] " +
+            (nav === "curriculum" ? "ring-1 ring-purple-line" : "")
+          }
+        >
+          <GraduationCap
+            size={14}
+            strokeWidth={1.75}
+            className="shrink-0 text-p1-dot"
+          />
+          المنهج
+        </Link>
+      </nav>
+
+      <nav className="flex flex-col gap-0.5 px-2 pb-3 pt-2">
         <span className="px-2 pb-1 text-xs font-medium text-muted">
           التصنيفات
         </span>
-        <Row href={href({ author: activeAuthor })} active={activeType === "all"}>
+        <Row
+          href={href({ author: activeAuthor })}
+          active={nav !== "curriculum" && activeType === "all"}
+        >
           <Layers size={14} strokeWidth={1.75} className="shrink-0 text-muted" />
           الكل
         </Row>
@@ -91,7 +113,7 @@ export default async function Sidebar({
             <Row
               key={t}
               href={href({ type: t, author: activeAuthor })}
-              active={activeType === t}
+              active={nav !== "curriculum" && activeType === t}
             >
               <Dot className={meta.dot} />
               {labels[t]}

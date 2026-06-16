@@ -33,13 +33,20 @@
   فيشتغل موقع HTML بروابطه النسبية؛ صفحة `/items/[id]/files` تتصفّح الملفات.
   ⚠️ المحتوى المرفوع يعمل على **نفس أصل التطبيق** (لتُحمَّل ملفاته الفرعية بالكوكي) — ارفع
   فقط مجلّدات تثق بها. الرفع يمرّ عبر server action (حدّ Vercel ~4.5MB لكل عملية).
+- **المنهج (modules)**: صفحة `/curriculum` — جدول `public.modules` (`completed_by text[]`،
+  `file_path`). كل موديول يُؤشَّر مكتملاً لكل شخص؛ النسبة لكل شخص = موديولاته ÷ الإجمالي.
+  أكشن في `src/app/module-actions.ts`، قراءة في `src/lib/modules.ts`. ملف الموديول يُخدَّم
+  عبر `/api/module-file/[id]` (HTML يعمل كصفحة، غيره يُنزَّل). رفع الملفات المشترك في
+  `src/lib/storage.ts`. رابط "المنهج" البنفسجي في الشريط الجانبي.
 
 ## أدوات الإعداد (lمرة واحدة، في scripts/)
 - `migrate.sql` / `grants.sql`: إنشاء الجدول + bucket + الصلاحيات (تُنفَّذ في Supabase SQL Editor).
 - `migrate-folders.sql`: يضيف أعمدة المجلّدات (شغّلها في SQL Editor، أو
   `node scripts/migrate-folders.mjs "<DATABASE_URL>"`). قاعدة المحلّي والإنتاج **واحدة**.
-- `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs`: فحص قاعدة البيانات
-  محلياً (`node scripts/<file>.mjs`).
+- `migrate-modules.sql`: ينشئ جدول `modules` + عمود `file_path` (SQL Editor أو
+  `node scripts/migrate-modules.mjs "<DATABASE_URL>"`).
+- `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs` / `check-modules.mjs`:
+  فحص قاعدة البيانات محلياً (`node scripts/<file>.mjs`).
 
 ## افتراضات
 - المساحة مشتركة — أي مستخدم يعدّل/يحذف أي عنصر. لتقييد ذلك أضِف فحص `author === user`

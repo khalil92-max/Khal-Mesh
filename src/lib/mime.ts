@@ -24,6 +24,13 @@ const CONTENT_TYPES: Record<string, string> = {
   woff2: "font/woff2",
   ttf: "font/ttf",
   pdf: "application/pdf",
+  zip: "application/zip",
+  ppt: "application/vnd.ms-powerpoint",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  doc: "application/msword",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  xls: "application/vnd.ms-excel",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 };
 
 export function contentTypeFor(path: string): string {
