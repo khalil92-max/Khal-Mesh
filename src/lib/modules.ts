@@ -1,6 +1,18 @@
 import "server-only";
 import { getServiceClient } from "./supabase";
-import type { Module } from "./types";
+import type { Module, Section } from "./types";
+
+export async function getSections(): Promise<Section[]> {
+  const supabase = getServiceClient();
+  const { data, error } = await supabase
+    .from("sections")
+    .select("*")
+    .order("position", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data as Section[]) ?? [];
+}
 
 export async function getModules(): Promise<Module[]> {
   const supabase = getServiceClient();

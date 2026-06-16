@@ -28,6 +28,16 @@ export interface ItemWithAttachment extends Item {
   folderCount: number;
 }
 
+/** قسم (مجلّد) يجمّع موديولات المنهج. */
+export interface Section {
+  id: string;
+  title: string;
+  position: number;
+  author: string;
+  created_at: string;
+  updated_at: string;
+}
+
 /** موديول ضمن المنهج، مع أسماء من أكمله. */
 export interface Module {
   id: string;
@@ -35,6 +45,7 @@ export interface Module {
   position: number;
   completed_by: string[];
   file_path: string | null;
+  section_id: string | null;
   author: string;
   created_at: string;
   updated_at: string;

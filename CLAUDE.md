@@ -38,6 +38,9 @@
   أكشن في `src/app/module-actions.ts`، قراءة في `src/lib/modules.ts`. ملف الموديول يُخدَّم
   عبر `/api/module-file/[id]` (HTML يعمل كصفحة، غيره يُنزَّل). رفع الملفات المشترك في
   `src/lib/storage.ts`. رابط "المنهج" البنفسجي في الشريط الجانبي.
+  تُجمَّع الموديولات في **أقسام** (مجلّدات قابلة للطيّ، واحد مفتوح في كل مرّة): جدول
+  `public.sections` + `modules.section_id` (FK on delete set null). الأكورديون في
+  `src/components/CurriculumAccordion.tsx`، نقل الموديول عبر `ModuleSection`.
 
 ## أدوات الإعداد (lمرة واحدة، في scripts/)
 - `migrate.sql` / `grants.sql`: إنشاء الجدول + bucket + الصلاحيات (تُنفَّذ في Supabase SQL Editor).
@@ -45,6 +48,8 @@
   `node scripts/migrate-folders.mjs "<DATABASE_URL>"`). قاعدة المحلّي والإنتاج **واحدة**.
 - `migrate-modules.sql`: ينشئ جدول `modules` + عمود `file_path` (SQL Editor أو
   `node scripts/migrate-modules.mjs "<DATABASE_URL>"`).
+- `migrate-sections.sql`: ينشئ جدول `sections` + عمود `modules.section_id`
+  (SQL Editor أو `node scripts/migrate-sections.mjs "<DATABASE_URL>"`).
 - `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs` / `check-modules.mjs`:
   فحص قاعدة البيانات محلياً (`node scripts/<file>.mjs`).
 
