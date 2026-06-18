@@ -60,7 +60,7 @@ export default async function Sidebar({
   const user = await getCurrentUser();
   const people = getAllowedUsers().map((u) => u.name);
   const hours = await getLearningHours();
-  const types: ItemType[] = ["note", "link", "project"];
+  const types: ItemType[] = ["note", "link", "project", "task"];
 
   return (
     <aside className="flex h-full w-full flex-col overflow-y-auto border-r border-line bg-sidebar">
@@ -111,6 +111,7 @@ export default async function Sidebar({
             note: "ملاحظات",
             link: "روابط",
             project: "مشاريع",
+            task: "مهام",
           };
           return (
             <Row

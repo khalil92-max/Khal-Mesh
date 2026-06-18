@@ -10,6 +10,7 @@ import {
   type Item,
   type ItemType,
 } from "@/lib/types";
+import { toInputValue } from "@/lib/deadline";
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -114,18 +115,18 @@ export default function ItemForm({
         />
       </div>
 
-      {type === "note" ? (
+      {type === "note" || type === "task" ? (
         <div>
           <label htmlFor="body" className={labelClass}>
-            المحتوى
+            {type === "task" ? "الوصف (اختياري)" : "المحتوى"}
           </label>
           <textarea
             id="body"
             name="body"
-            rows={6}
+            rows={type === "task" ? 4 : 6}
             defaultValue={item?.body ?? ""}
             className={fieldClass + " resize-y leading-relaxed"}
-            placeholder="اكتب الملاحظة…"
+            placeholder={type === "task" ? "تفاصيل المهمة…" : "اكتب الملاحظة…"}
           />
         </div>
       ) : (
@@ -142,6 +143,26 @@ export default function ItemForm({
             className={fieldClass + " text-left"}
             placeholder="https://"
           />
+        </div>
+      )}
+
+      {type === "task" && (
+        <div>
+          <label htmlFor="deadline" className={labelClass}>
+            الموعد النهائي
+          </label>
+          <input
+            id="deadline"
+            name="deadline"
+            type="datetime-local"
+            required
+            dir="ltr"
+            defaultValue={toInputValue(item?.deadline)}
+            className={fieldClass + " tnum text-left"}
+          />
+          <p className="mt-1.5 text-xs text-faint">
+            عند وصول الوقت تظهر المهمة كورقة ممزّقة — انتهى وقتها.
+          </p>
         </div>
       )}
 

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import {
+  AlarmClockOff,
+  CalendarClock,
   ExternalLink,
   FolderOpen,
   List,
@@ -9,6 +11,7 @@ import {
 } from "lucide-react";
 import type { ItemWithAttachment } from "@/lib/types";
 import { TYPE_META } from "@/lib/types";
+import { formatDeadline, isOverdue, relativeDeadline } from "@/lib/deadline";
 import TypeBadge from "./TypeBadge";
 import Avatar from "./Avatar";
 import DeleteButton from "./DeleteButton";
@@ -19,6 +22,10 @@ function formatDate(iso: string): string {
 
 export default function ItemCard({ item }: { item: ItemWithAttachment }) {
   const meta = TYPE_META[item.type];
+  const isText = item.type === "note" || item.type === "task";
+  const showUrl =
+    (item.type === "link" || item.type === "project") && !!item.url;
+  const overdue = item.type === "task" && isOverdue(item.deadline);
 
   return (
     <article
@@ -26,7 +33,8 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
         "group relative flex flex-col gap-2.5 rounded-card border-s-4 p-4 ring-1 ring-black/5 transition-shadow duration-150 hover:ring-black/10 " +
         meta.fill +
         " " +
-        meta.bar
+        meta.bar +
+        (overdue ? " torn-bottom" : "")
       }
     >
       <header className="flex items-center justify-between gap-2">
@@ -44,10 +52,15 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
         </div>
       </header>
 
-      <h2 className="break-words text-base font-semibold leading-snug text-ink">
-        {item.type !== "note" && item.url ? (
+      <h2
+        className={
+          "break-words text-base font-semibold leading-snug text-ink" +
+          (overdue ? " text-muted line-through decoration-red-500" : "")
+        }
+      >
+        {showUrl ? (
           <a
-            href={item.url}
+            href={item.url!}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex items-center gap-1.5 hover:underline"
@@ -64,15 +77,43 @@ export default function ItemCard({ item }: { item: ItemWithAttachment }) {
         )}
       </h2>
 
-      {item.type === "note" && item.body && (
+      {item.type === "task" && item.deadline && (
+        <span
+          className={
+            "inline-flex w-fit max-w-full items-center gap-1.5 rounded-md border px-2 py-1 text-xs font-medium " +
+            (overdue
+              ? "border-red-300 bg-red-50 text-red-700"
+              : "border-line bg-white/70 text-tag-fg")
+          }
+        >
+          {overdue ? (
+            <AlarmClockOff size={13} strokeWidth={1.75} className="shrink-0" />
+          ) : (
+            <CalendarClock
+              size={13}
+              strokeWidth={1.75}
+              className="shrink-0 text-task-dot"
+            />
+          )}
+          <span className="truncate">
+            {overdue
+              ? `انتهى الوقت · ${formatDeadline(item.deadline)}`
+              : relativeDeadline(item.deadline)
+                ? `${formatDeadline(item.deadline)} · ${relativeDeadline(item.deadline)}`
+                : formatDeadline(item.deadline)}
+          </span>
+        </span>
+      )}
+
+      {isText && item.body && (
         <p className="line-clamp-4 whitespace-pre-wrap text-sm leading-relaxed text-tag-fg">
           {item.body}
         </p>
       )}
 
-      {item.type !== "note" && item.url && (
+      {showUrl && (
         <a
-          href={item.url}
+          href={item.url!}
           target="_blank"
           rel="noreferrer noopener"
           className="mono block truncate text-xs text-tag-fg hover:underline"

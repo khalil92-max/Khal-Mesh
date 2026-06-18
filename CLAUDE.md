@@ -27,6 +27,13 @@
 - مصادقة: `/api/login` يتحقق ويضبط cookie موقّعة HMAC (`src/lib/session.ts`)؛
   `src/middleware.ts` يحمي كل المسارات ماعدا `/login` و `/api/login`.
 - البيانات: server actions في `src/app/actions.ts`؛ القراءة في `src/lib/items.ts`.
+- **الأنواع (TYPE_META)**: `note/link/project/task` في `src/lib/types.ts`. الملاحظة والمهمة
+  لهما وصف نصّي (`body`)، الرابط والمشروع لهما `url`.
+- **المهام (task)**: نوع رابع مثل الملاحظة + عمود `deadline timestamp` (وقت حائط بلا منطقة
+  زمنية). عند وصول الوقت تظهر البطاقة **كورقة ممزّقة** (صنف `.torn-bottom` في `globals.css`
+  يقصّ الحافة السفلية + يبهتها، والعنوان يُشطَّب). منطق الوقت في `src/lib/deadline.ts`
+  (**يُحسب بتوقيت الرياض** `DEADLINE_TZ`، فمقارنة "انتهى؟" صحيحة رغم أن الخادم UTC).
+  لون النوع وردي (`--task-bg/--task-dot`).
 - المرفقات تُخدَّم عبر `/api/file/[id]` بنوع المحتوى الصحيح (HTML يعمل كصفحة، لا كنص).
 - **مرفقات المجلّدات**: يمكن رفع مجلّد كامل لعنصر (أعمدة `folder_prefix/folder_entry/folder_files`
   على `items`، تخزين تحت `folders/<uuid>/...`). يُخدَّم عبر `/api/folder/[id]/[...path]`
@@ -55,6 +62,8 @@
   (SQL Editor أو `node scripts/migrate-sections.mjs "<DATABASE_URL>"`).
 - `migrate-learning.sql`: ينشئ جدول `learning_log` لساعات التعلّم
   (SQL Editor أو `node scripts/migrate-learning.mjs "<DATABASE_URL>"`).
+- `migrate-tasks.sql`: يضيف قيمة `'task'` للـ enum + عمود `deadline` على `items`
+  (SQL Editor أو `node scripts/migrate-tasks.mjs "<DATABASE_URL>"`).
 - `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs` / `check-modules.mjs`:
   فحص قاعدة البيانات محلياً (`node scripts/<file>.mjs`).
 

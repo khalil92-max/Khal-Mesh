@@ -28,6 +28,8 @@ const config: Config = {
         "link-dot": "var(--link-dot)",
         "project-bg": "var(--project-bg)",
         "project-dot": "var(--project-dot)",
+        "task-bg": "var(--task-bg)",
+        "task-dot": "var(--task-dot)",
         "p1-dot": "var(--p1-dot)",
         "p2-dot": "var(--p2-dot)",
         "purple-bg": "var(--purple-bg)",

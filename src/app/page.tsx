@@ -14,6 +14,7 @@ const HEADINGS: Record<string, string> = {
   note: "الملاحظات",
   link: "الروابط",
   project: "المشاريع",
+  task: "المهام",
 };
 
 export default async function HomePage({

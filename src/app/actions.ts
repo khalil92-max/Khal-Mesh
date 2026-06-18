@@ -5,9 +5,10 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { BUCKET, getServiceClient } from "@/lib/supabase";
 import { getItem } from "@/lib/items";
+import { normalizeDeadline } from "@/lib/deadline";
 import type { ItemType } from "@/lib/types";
 
-const VALID_TYPES: ItemType[] = ["note", "link", "project"];
+const VALID_TYPES: ItemType[] = ["note", "link", "project", "task"];
 const MAX_FOLDER_FILES = 300;
 const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB لكل ملف
 const MAX_TOTAL_BYTES = 40 * 1024 * 1024; // 40MB إجمالي المجلّد
@@ -141,8 +142,11 @@ export async function createItem(formData: FormData): Promise<void> {
   const title = clean(formData.get("title"));
   if (!title) throw new Error("العنوان مطلوب");
 
-  const body = type === "note" ? clean(formData.get("body")) : null;
-  const url = type !== "note" ? clean(formData.get("url")) : null;
+  // الملاحظة والمهمة لهما وصف نصّي؛ الرابط والمشروع لهما رابط.
+  const isText = type === "note" || type === "task";
+  const body = isText ? clean(formData.get("body")) : null;
+  const url = isText ? null : clean(formData.get("url"));
+  const deadline = type === "task" ? normalizeDeadline(formData.get("deadline")) : null;
 
   const file = formData.get("file");
   const file_path = await uploadFile(file instanceof File ? file : null);
@@ -164,6 +168,7 @@ export async function createItem(formData: FormData): Promise<void> {
     title,
     body,
     url,
+    deadline,
     file_path,
     folder_prefix: folder?.prefix ?? null,
     folder_entry: folder?.entry ?? null,
@@ -191,8 +196,10 @@ export async function updateItem(id: string, formData: FormData): Promise<void> 
   const title = clean(formData.get("title"));
   if (!title) throw new Error("العنوان مطلوب");
 
-  const body = type === "note" ? clean(formData.get("body")) : null;
-  const url = type !== "note" ? clean(formData.get("url")) : null;
+  const isText = type === "note" || type === "task";
+  const body = isText ? clean(formData.get("body")) : null;
+  const url = isText ? null : clean(formData.get("url"));
+  const deadline = type === "task" ? normalizeDeadline(formData.get("deadline")) : null;
 
   const removeAttachment = formData.get("remove_attachment") === "on";
   const removeFolder = formData.get("remove_folder") === "on";
@@ -240,6 +247,7 @@ export async function updateItem(id: string, formData: FormData): Promise<void> 
       title,
       body,
       url,
+      deadline,
       file_path,
       folder_prefix: folder.prefix,
       folder_entry: folder.entry,

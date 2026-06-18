@@ -1,4 +1,4 @@
-export type ItemType = "note" | "link" | "project";
+export type ItemType = "note" | "link" | "project" | "task";
 
 export interface Item {
   id: string;
@@ -6,6 +6,8 @@ export interface Item {
   title: string;
   body: string | null;
   url: string | null;
+  /** الموعد النهائي للمهمة (وقت حائط "YYYY-MM-DDTHH:mm:ss") أو null. */
+  deadline: string | null;
   file_path: string | null;
   /** بادئة تخزين المجلّد المرفق (folders/<uuid>) أو null. */
   folder_prefix: string | null;
@@ -51,12 +53,13 @@ export interface Module {
   updated_at: string;
 }
 
-export const ITEM_TYPES: ItemType[] = ["note", "link", "project"];
+export const ITEM_TYPES: ItemType[] = ["note", "link", "project", "task"];
 
 export const TYPE_LABELS: Record<ItemType, string> = {
   note: "ملاحظة",
   link: "رابط",
   project: "مشروع",
+  task: "مهمة",
 };
 
 /**
@@ -89,5 +92,12 @@ export const TYPE_META: Record<
     fill: "bg-project-bg",
     dot: "bg-project-dot",
     bar: "border-project-dot",
+  },
+  task: {
+    label: "مهمة",
+    emoji: "⏰",
+    fill: "bg-task-bg",
+    dot: "bg-task-dot",
+    bar: "border-task-dot",
   },
 };
