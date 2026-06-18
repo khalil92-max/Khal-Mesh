@@ -41,6 +41,9 @@
   تُجمَّع الموديولات في **أقسام** (مجلّدات قابلة للطيّ، واحد مفتوح في كل مرّة): جدول
   `public.sections` + `modules.section_id` (FK on delete set null). الأكورديون في
   `src/components/CurriculumAccordion.tsx`، نقل الموديول عبر `ModuleSection`.
+- **ساعات التعلّم**: جدول `public.learning_log` (`person`, `hours`)؛ إجمالي كل شخص يظهر
+  جنب اسمه في الشريط الجانبي. القراءة في `src/lib/learning.ts` (**متسامحة** ترجع {} لو
+  الجدول مفقود حتى لا ينهار الشريط)، الإضافة عبر `AddHours` + `src/app/learning-actions.ts`.
 
 ## أدوات الإعداد (lمرة واحدة، في scripts/)
 - `migrate.sql` / `grants.sql`: إنشاء الجدول + bucket + الصلاحيات (تُنفَّذ في Supabase SQL Editor).
@@ -50,6 +53,8 @@
   `node scripts/migrate-modules.mjs "<DATABASE_URL>"`).
 - `migrate-sections.sql`: ينشئ جدول `sections` + عمود `modules.section_id`
   (SQL Editor أو `node scripts/migrate-sections.mjs "<DATABASE_URL>"`).
+- `migrate-learning.sql`: ينشئ جدول `learning_log` لساعات التعلّم
+  (SQL Editor أو `node scripts/migrate-learning.mjs "<DATABASE_URL>"`).
 - `smoke.mjs` / `list.mjs` / `check-folders.mjs` / `folder-info.mjs` / `check-modules.mjs`:
   فحص قاعدة البيانات محلياً (`node scripts/<file>.mjs`).
 

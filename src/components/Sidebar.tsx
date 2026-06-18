@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { GraduationCap, Layers } from "lucide-react";
+import { Clock, GraduationCap, Layers } from "lucide-react";
 import { getCurrentUser, getAllowedUsers } from "@/lib/auth";
+import { formatHours, getLearningHours } from "@/lib/learning";
 import { TYPE_META, type ItemType } from "@/lib/types";
 import MiniCalendar from "./MiniCalendar";
 import Avatar from "./Avatar";
+import AddHours from "./AddHours";
 import LogoutButton from "./LogoutButton";
 
 function href(params: { type?: string; author?: string }): string {
@@ -57,6 +59,7 @@ export default async function Sidebar({
 }) {
   const user = await getCurrentUser();
   const people = getAllowedUsers().map((u) => u.name);
+  const hours = await getLearningHours();
   const types: ItemType[] = ["note", "link", "project"];
 
   return (
@@ -129,19 +132,32 @@ export default async function Sidebar({
           </span>
           {people.map((name, i) => {
             const active = activeAuthor === name;
+            const hrs = hours[name] ?? 0;
+            const to = active
+              ? href({ type: activeType })
+              : href({ type: activeType, author: name });
             return (
-              <Row
-                key={name}
-                href={
-                  active
-                    ? href({ type: activeType })
-                    : href({ type: activeType, author: name })
-                }
-                active={active}
-              >
-                <Dot className={PERSON_DOTS[i % PERSON_DOTS.length]} />
-                {name}
-              </Row>
+              <div key={name} className="flex items-center gap-0.5">
+                <Link
+                  href={to}
+                  className={
+                    "flex grow items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors " +
+                    (active
+                      ? "bg-black/[0.06] font-medium text-ink"
+                      : "text-muted hover:bg-black/[0.04] hover:text-ink")
+                  }
+                >
+                  <Dot className={PERSON_DOTS[i % PERSON_DOTS.length]} />
+                  <span className="grow">{name}</span>
+                  {hrs > 0 && (
+                    <span className="tnum inline-flex items-center gap-1 text-xs text-faint">
+                      <Clock size={11} strokeWidth={1.75} />
+                      {formatHours(hrs)}س
+                    </span>
+                  )}
+                </Link>
+                <AddHours person={name} />
+              </div>
             );
           })}
         </nav>
